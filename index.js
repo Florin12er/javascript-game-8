@@ -12,10 +12,10 @@ window.addEventListener("load", () => {
       window.addEventListener("keydown", (e) => {
         if (
           (e.key === " " ||
-            e.key === "ArrowDown" ||
-            e.key === "ArrowUp" ||
-            e.key === "ArrowLeft" ||
-            e.key === "ArrowRight") &&
+            e.key === "s" ||
+            e.key === "w" ||
+            e.key === "a" ||
+            e.key === "d") &&
           this.keys.indexOf(e.key) === -1
         ) {
           this.keys.push(e.key);
@@ -23,14 +23,13 @@ window.addEventListener("load", () => {
       });
       window.addEventListener("keyup", (e) => {
         if (
-          (e.key === " " ||
-            e.key === "ArrowDown" ||
-            e.key === "ArrowUp" ||
-            e.key === "ArrowLeft" ||
-            e.key === "ArrowRight") &&
-          this.keys.splice(this.keys.indexOf(e.key), 1)
+          e.key === " " ||
+          e.key === "s" ||
+          e.key === "w" ||
+          e.key === "a" ||
+          e.key === "d"
         ) {
-          this.keys.push(e.key);
+          this.keys.splice(this.keys.indexOf(e.key), 1);
         }
       });
     }
@@ -48,7 +47,8 @@ window.addEventListener("load", () => {
       this.spriteHeight = 200;
       this.frameX = 0;
       this.frameY = 0;
-      this.speed = 1;
+      this.speed = 0;
+      this.vy = 0;
 
       this.image.src =
         "https://www.frankslaboratory.co.uk/downloads/93/player.png";
@@ -68,7 +68,15 @@ window.addEventListener("load", () => {
       );
     }
     update() {
+      this.y += this.vy;
       this.x += this.speed;
+      if (inputs.keys.indexOf("d") > -1) this.speed = 5;
+      else if (inputs.keys.indexOf("a") > -1) this.speed = -5;
+      else if (inputs.keys.indexOf(" ") > -1) this.vy += 30;
+      else this.speed = 0;
+      if (this.x < 0) this.x = 0;
+      else if (this.x > this.gameWidth - this.width)
+        this.x = this.gameWidth - this.width;
     }
   }
   class Background {}
@@ -82,10 +90,8 @@ window.addEventListener("load", () => {
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     player.draw(ctx);
-    player.update();
+    player.update(inputs);
     requestAnimationFrame(animate);
   }
   animate();
 });
-
-//timestamp: 5:01:16
