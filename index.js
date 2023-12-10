@@ -1,7 +1,17 @@
 /** @type {HTMLCanvasElement} */
 
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", () => {
+  let audio = new Audio("./sounds/8-bit_-_crisis.mp3");
+  audio.loop = true;
+  audio.volume = 0.2;
+  const turnOnSound = document.getElementById("sound");
+  let deathSound = new Audio(
+    "sounds/roblox-death-sound-sound-effect-(hd)-made-with-Voicemod-technology.mp3",
+  );
+  deathSound.loop = true;
+  deathSound.volume = 1;
   const canvas = document.getElementById("canvas1");
+  document.querySelector("body").appendChild(audio);
   const ctx = canvas.getContext("2d");
   canvas.width = 1800;
   canvas.height = 720;
@@ -14,6 +24,14 @@ window.addEventListener("load", () => {
   let gameOver = false;
   const fullScreen = document.getElementById("fullscreen");
 
+  function toggleMusic() {
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+  turnOnSound.addEventListener("click", toggleMusic);
   class input {
     constructor() {
       this.keys = [];
@@ -85,6 +103,10 @@ window.addEventListener("load", () => {
       this.fps = 20;
       this.frameTimer = 0;
       this.frameInterval = 1000 / this.fps;
+      this.jumpSound = new Audio();
+      this.jumpSound.src = "./sounds/action_jump.mp3";
+      this.jumpSound.loop = true;
+      this.jumpSound.volume = 1;
 
       this.image.src =
         "https://www.frankslaboratory.co.uk/downloads/93/player.png";
@@ -140,9 +162,15 @@ window.addEventListener("load", () => {
       this.y += this.vy;
       if (!this.onGround()) {
         this.maxFrame = 5;
+        this.jumpSound.play();
         this.vy += this.gravity;
         this.frameY = 1;
+        if (gameOver) {
+          this.jumpSound.pause();
+        }
       } else {
+        this.jumpSound.currentTime = 0;
+        this.jumpSound.pause();
         this.maxFrame = 8;
         this.vy = 0;
         this.frameY = 0;
@@ -186,6 +214,33 @@ window.addEventListener("load", () => {
         this.height,
       );
     }
+    difficulty() {
+      if (score === 0) this.speed = 3;
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 5) {
+        this.speed = 4;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 10) {
+        this.speed = 5;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 15) {
+        this.speed = 6;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 20) {
+        this.speed = 7;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 25) {
+        this.speed = 8;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 30) {
+        this.speed = 9;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 35) {
+        this.speed = 10;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 40) {
+        this.speed = 11;
+      }
+    }
     update() {
       this.x -= this.speed;
       if (this.x < 0 - this.width) this.x = 0;
@@ -210,6 +265,44 @@ window.addEventListener("load", () => {
       this.frameTimer = 0;
       this.frameInterval = 500 / this.fps;
       this.markedFordelation = false;
+    }
+    difficulty() {
+      if (score === 0) {
+        this.speed = 8;
+        randomEnemyInterval = Math.random() * 800 + 300;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 5) {
+        randomEnemyInterval = Math.random() * 600 + 300;
+        this.speed = 10;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 10) {
+        randomEnemyInterval = Math.random() * 400 + 300;
+        this.speed = 12;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 15) {
+        randomEnemyInterval = Math.random() * 300;
+        this.speed = 14;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 20) {
+        randomEnemyInterval = Math.random() * 200;
+        this.speed = 16;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 25) {
+        randomEnemyInterval = Math.random() * 100;
+        this.speed = 18;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 30) {
+        randomEnemyInterval = Math.random() * 50;
+        this.speed = 20;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 35) {
+        randomEnemyInterval = Math.random() * 20;
+        this.speed = 22;
+      }
+      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 40) {
+        randomEnemyInterval = Math.random() * 10;
+        this.speed = 24;
+      }
     }
     draw(context) {
       context.drawImage(
@@ -249,6 +342,7 @@ window.addEventListener("load", () => {
     enemies.forEach((enemy) => {
       enemy.draw(ctx);
       enemy.update(deltaTime);
+      enemy.difficulty();
     });
     enemies = enemies.filter((enemy) => !enemy.markedFordelation);
   }
@@ -303,11 +397,15 @@ window.addEventListener("load", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     background.draw(ctx);
     background.update();
+    background.difficulty();
     player.draw(ctx);
     player.update(inputs, deltaTime, enemies);
     handleEnemies(deltaTime);
     displayStatus(ctx);
+    deathSound.currentTime = 0.7;
+    if (!gameOver) deathSound.pause();
     if (!gameOver) requestAnimationFrame(animate);
+    if (gameOver) deathSound.play();
   }
   animate(0);
 });
