@@ -216,30 +216,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     difficulty() {
       if (score === 0) this.speed = 3;
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 5) {
-        this.speed = 4;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 10) {
-        this.speed = 5;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 15) {
-        this.speed = 6;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 20) {
-        this.speed = 7;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 25) {
-        this.speed = 8;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 30) {
-        this.speed = 9;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 35) {
-        this.speed = 10;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 40) {
-        this.speed = 11;
-      }
+      this.speed = Math.floor(score / 5) + 3;
     }
     update() {
       this.x -= this.speed;
@@ -267,42 +244,11 @@ window.addEventListener("DOMContentLoaded", () => {
       this.markedFordelation = false;
     }
     difficulty() {
-      if (score === 0) {
-        this.speed = 8;
-        randomEnemyInterval = Math.random() * 800 + 300;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 5) {
-        randomEnemyInterval = Math.random() * 600 + 300;
-        this.speed = 10;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 10) {
-        randomEnemyInterval = Math.random() * 400 + 300;
-        this.speed = 12;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 15) {
-        randomEnemyInterval = Math.random() * 300;
-        this.speed = 14;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 20) {
-        randomEnemyInterval = Math.random() * 200;
-        this.speed = 16;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 25) {
-        randomEnemyInterval = Math.random() * 100;
-        this.speed = 18;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 30) {
-        randomEnemyInterval = Math.random() * 50;
-        this.speed = 20;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 35) {
-        randomEnemyInterval = Math.random() * 20;
-        this.speed = 22;
-      }
-      if (score === Math.floor(Math.random() * (10 - 5 + 1)) + 40) {
-        randomEnemyInterval = Math.random() * 10;
-        this.speed = 24;
-      }
+      if (score === 0) this.speed = 8;
+      randomEnemyInterval = Math.random() * 800 + 300;
+
+      this.speed = Math.floor(score / 5) * 2 + 8;
+      randomEnemyInterval = Math.random() * (800 - (score % 5) * 100) + 300;
     }
     draw(context) {
       context.drawImage(
