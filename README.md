@@ -1,2 +1,2 @@
-# javascript-game-8
-my eight  javascript game: https://florin12er.github.io/javascript-game-8/
+# endless runner dog
+a copy of the T-rex game from the browser but better made: https://florin12er.github.io/javascript-game-8/
